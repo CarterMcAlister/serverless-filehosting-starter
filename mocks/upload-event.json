@@ -1,0 +1,8 @@
+{
+  "body": "{\"name\":\"hello world\",\"fileReference\":[ \"file1.jpg\", \"file2.png\", \"file3.zip\" ]}",
+  "requestContext": {
+    "identity": {
+      "cognitoIdentityId": "TEST-USER"
+    }
+  }
+}
