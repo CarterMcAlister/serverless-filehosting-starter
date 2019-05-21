@@ -14,8 +14,9 @@ export async function main(event, context) {
       description: data.description,
       content: data.content,
       fileReference: data.fileReference,
-      createdAt: Date.now()
-    }
+      imageReference: data.imageReference,
+      createdAt: Date.now(),
+    },
   };
 
   try {
