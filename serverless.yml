@@ -12,6 +12,8 @@ custom:
   stage: ${opt:stage, self:provider.stage}
   # Set the table name here so we can use it while testing locally
   tableName: ${self:custom.stage}-files
+  # Set the table for user data
+  userTableName: ${self:custom.stage}-userdata
   # Set our DynamoDB throughput for prod and all other non-prod stages.
   tableThroughputs:
     prod: 5
@@ -21,7 +23,6 @@ custom:
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
-
 
 provider:
   name: aws
@@ -33,6 +34,7 @@ provider:
   # under process.env.
   environment:
     tableName: ${self:custom.tableName}
+    userTableName: ${self:custom.userTableName}
 
   iamRoleStatements:
     - Effect: Allow
@@ -47,8 +49,7 @@ provider:
       # Restrict our IAM role permissions to
       # the specific table for the stage
       Resource:
-        - "Fn::GetAtt": [ FilesTable, Arn ]
-
+        - "Fn::GetAtt": [FilesTable, Arn]
 
 functions:
   # Defines an HTTP API endpoint that calls the main function in upload.js
@@ -112,6 +113,16 @@ functions:
           path: file/{id}
           method: delete
           cors: true
+          authorizer: aws_iam
+
+  # Defines an HTTP API endpoint that calls the main function in create-user.js
+  # - method: POST request
+  # - authorizer: authenticate using the AWS IAM role
+  create-user:
+    handler: src/create-user.main
+    events:
+      - http:
+          method: post
           authorizer: aws_iam
 
 # Create our resources with separate CloudFormation templates
