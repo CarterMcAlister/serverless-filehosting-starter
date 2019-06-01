@@ -50,6 +50,7 @@ provider:
       # the specific table for the stage
       Resource:
         - "Fn::GetAtt": [FilesTable, Arn]
+        - "Fn::GetAtt": [UsersTable, Arn]
 
 functions:
   # Defines an HTTP API endpoint that calls the main function in upload.js
@@ -116,12 +117,14 @@ functions:
           authorizer: aws_iam
 
   # Defines an HTTP API endpoint that calls the main function in create-user.js
+  # - path: url path is /create-user
   # - method: POST request
   # - authorizer: authenticate using the AWS IAM role
   create-user:
     handler: src/create-user.main
     events:
       - http:
+          path: create-user
           method: post
           authorizer: aws_iam
 
