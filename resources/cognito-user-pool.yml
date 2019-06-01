@@ -10,7 +10,10 @@ Resources:
         - preferred_username
       LambdaConfig:
         # PostConfirmation: ${self:service}-${self:custom.stage}-create-user
-        PostConfirmation: { "Fn::GetAtt": [create-user, Arn] }
+        PostConfirmation:
+          {
+            "Fn::GetAtt": [serverless-filehosting-starter-dev-create-user, Arn],
+          }
 
   CognitoUserPoolClient:
     Type: AWS::Cognito::UserPoolClient
