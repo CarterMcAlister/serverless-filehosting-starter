@@ -3,17 +3,21 @@ Resources:
     Type: AWS::Cognito::UserPool
     Properties:
       # Generate a name based on the stage
-      UserPoolName: ${self:custom.stage}-user-poolX
+      UserPoolName: ${self:custom.stage}-user-pool
       # Set email as an alias
       AliasAttributes:
         - email
         - preferred_username
-      LambdaConfig:
-        # PostConfirmation: ${self:service}-${self:custom.stage}-create-user
-        PostConfirmation:
-          {
-            "Fn::GetAtt": [serverless-filehosting-starter-dev-create-user, Arn],
-          }
+      AutoVerifiedAttributes:
+        - email
+      # LambdaConfig:
+      #   PostConfirmation: arn:aws:lambda:us-east-1:393638563319:function:serverless-filehosting-starter-dev-create-user:8
+      # PostConfirmation: ${self:service}-${self:custom.stage}-create-user
+      # PostConfirmation:
+      #   {
+      #     "Fn::GetAtt":
+      #       ["serverless-filehosting-starter-dev-create-user", Arn],
+      #   }
 
   CognitoUserPoolClient:
     Type: AWS::Cognito::UserPoolClient

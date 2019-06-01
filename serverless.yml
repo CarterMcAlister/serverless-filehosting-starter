@@ -87,7 +87,7 @@ functions:
     handler: src/list.main
     events:
       - http:
-          path: list
+          path: list/{id}
           method: get
           cors: true
           authorizer: aws_iam
@@ -126,6 +126,18 @@ functions:
       - http:
           path: create-user
           method: post
+          authorizer: aws_iam
+
+  get-user:
+    # Defines an HTTP API endpoint that calls the main function in get.js
+    # - path: url path is /user/{id}
+    # - method: GET request
+    handler: src/get-user.main
+    events:
+      - http:
+          path: user/{id}
+          method: get
+          cors: true
           authorizer: aws_iam
 
 # Create our resources with separate CloudFormation templates
