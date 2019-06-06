@@ -35,6 +35,7 @@ provider:
   environment:
     tableName: ${self:custom.tableName}
     userTableName: ${self:custom.userTableName}
+    region: ${self:provider.region}
 
   iamRoleStatements:
     - Effect: Allow
@@ -46,11 +47,19 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
+        - cognito-idp:ListUsers
       # Restrict our IAM role permissions to
       # the specific table for the stage
       Resource:
         - "Fn::GetAtt": [FilesTable, Arn]
         - "Fn::GetAtt": [UsersTable, Arn]
+
+    - Effect: Allow
+      Action:
+        - cognito-idp:ListUsers
+      Resource:
+        # Todo: fix hardcoding
+        - "arn:aws:cognito-idp:us-east-1:393638563319:userpool/us-east-1_2iED5ewUY"
 
 functions:
   # Defines an HTTP API endpoint that calls the main function in upload.js
@@ -75,7 +84,7 @@ functions:
     handler: src/get.main
     events:
       - http:
-          path: file/{id}
+          path: item/{userName}/{id}
           method: get
           cors: true
           authorizer: aws_iam

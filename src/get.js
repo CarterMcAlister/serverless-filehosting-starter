@@ -7,6 +7,7 @@ export async function main(event, context) {
     // 'Key' defines the partition key and sort key of the item to be retrieved
     // - 'uploadId': path parameter
     Key: {
+      userName: event.pathParameters.userName,
       uploadId: event.pathParameters.id,
     },
   };

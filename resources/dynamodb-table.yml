@@ -4,12 +4,12 @@ Resources:
     Properties:
       TableName: ${self:custom.tableName}
       AttributeDefinitions:
-        - AttributeName: userId
+        - AttributeName: userName
           AttributeType: S
         - AttributeName: uploadId
           AttributeType: S
       KeySchema:
-        - AttributeName: userId
+        - AttributeName: userName
           KeyType: HASH
         - AttributeName: uploadId
           KeyType: RANGE
@@ -23,15 +23,11 @@ Resources:
     Properties:
       TableName: ${self:custom.userTableName}
       AttributeDefinitions:
-        - AttributeName: userId
-          AttributeType: S
         - AttributeName: userName
           AttributeType: S
       KeySchema:
-        - AttributeName: userId
-          KeyType: HASH
         - AttributeName: userName
-          KeyType: RANGE
+          KeyType: HASH
       # Set the capacity based on the stage
       ProvisionedThroughput:
         ReadCapacityUnits: ${self:custom.tableThroughput}

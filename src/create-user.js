@@ -9,10 +9,11 @@ export async function main(event, context, callback) {
   const params = {
     TableName: process.env.userTableName,
     Item: {
-      userId,
       userName,
-      joinedOn: Date.now()
-    }
+      userId,
+      avatar: null,
+      joinedOn: Date.now(),
+    },
   };
 
   try {
