@@ -3,7 +3,8 @@ import * as dynamoDbLib from "./libs/dynamodb-lib";
 import { success, failure } from "./libs/response-lib";
 import getCognitoIdentityId from "./utils/getCognitoIdentityId";
 import { getUsernameOfAuthenticatedUser } from "./utils/getUsernameOfAuthenticatedUser";
-import AWS from "aws-sdk";
+
+const formatName = string => string.replace(/[^a-z0-9_-]/gi, "-").toLowerCase();
 
 export async function main(event, context) {
   const data = JSON.parse(event.body);
@@ -13,7 +14,7 @@ export async function main(event, context) {
     TableName: process.env.tableName,
     Item: {
       userName,
-      uploadId: uuid.v1(),
+      uploadId: formatName(data.name),
       userId: getCognitoIdentityId(event.requestContext.identity),
       name: data.name,
       category: data.category,
@@ -22,7 +23,8 @@ export async function main(event, context) {
       fileReference: data.fileReference,
       imageReference: data.imageReference,
       createdAt: Date.now(),
-    },
+      GsiHash: "Item"
+    }
   };
   try {
     await dynamoDbLib.call("put", params);

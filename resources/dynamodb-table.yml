@@ -8,11 +8,30 @@ Resources:
           AttributeType: S
         - AttributeName: uploadId
           AttributeType: S
+        - AttributeName: createdAt
+          AttributeType: N
+        - AttributeName: GsiHash
+          AttributeType: S
       KeySchema:
         - AttributeName: userName
           KeyType: HASH
         - AttributeName: uploadId
           KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: RecentlyUploaded
+          KeySchema:
+            - AttributeName: GsiHash
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: INCLUDE
+            NonKeyAttributes:
+              - Name
+          ProvisionedThroughput:
+            # TODO: Change to custom value for GSI
+            ReadCapacityUnits: ${self:custom.tableThroughput}
+            WriteCapacityUnits: ${self:custom.tableThroughput}
       # Set the capacity based on the stage
       ProvisionedThroughput:
         ReadCapacityUnits: ${self:custom.tableThroughput}

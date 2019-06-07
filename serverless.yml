@@ -52,6 +52,9 @@ provider:
       # the specific table for the stage
       Resource:
         - "Fn::GetAtt": [FilesTable, Arn]
+        # Todo: fix hardcoding
+        # Added to give permissions for FilesTable GSI
+        - "arn:aws:dynamodb:us-east-1:393638563319:table/dev-files/index/*"
         - "Fn::GetAtt": [UsersTable, Arn]
 
     - Effect: Allow
@@ -85,6 +88,15 @@ functions:
     events:
       - http:
           path: item/{userName}/{id}
+          method: get
+          cors: true
+          authorizer: aws_iam
+
+  get-most-recent:
+    handler: src/get-most-recent.main
+    events:
+      - http:
+          path: recent
           method: get
           cors: true
           authorizer: aws_iam
