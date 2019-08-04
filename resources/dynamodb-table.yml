@@ -25,9 +25,7 @@ Resources:
             - AttributeName: createdAt
               KeyType: RANGE
           Projection:
-            ProjectionType: INCLUDE
-            NonKeyAttributes:
-              - Name
+            ProjectionType: ALL
           ProvisionedThroughput:
             # TODO: Change to custom value for GSI
             ReadCapacityUnits: ${self:custom.tableThroughput}
